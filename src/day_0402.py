@@ -1,71 +1,67 @@
-def IsMoreValidPassword(password ):
-	passStr = "" + str(password) + ""
+def IsValidPassword(password):
+    passStr = "" + str(password) + ""
+
+    if len(passStr) != 6:
+        return False
+
+    foundAdjacent = False
+    i = 1
+    while i < len(passStr):
+        d1 = passStr[i - 1]
+        d2 = passStr[i]
+
+        # Two adjacent digits are the same (like `22` in `122345`).
+        if d1 == d2:
+            foundAdjacent = True
+
+        # Going from left to right, the digits never decrease; they only ever increase or stay the same (like `111123` or `135679`).
+        if d1 > d2:
+            return False
+        i = i + 1
+
+    if foundAdjacent == False:
+        return False
+
+    return True
 
 
-	# It is a six-digit number.
-	if len(passStr) != 6:
-		return False
-	i = 1
-	while i < len(passStr):
-		d1 = passStr[i-1]
-		d2 = passStr[i]
-		if d1 > d2:
-			return False
-		i = i + 1
+def isValidPassword2(password):
+    password = "" + str(password) + ""
+    if len(password) != 6:
+        return False
+    i = 1
+    while i < len(password):
+        d1 = password[i - 1]
+        d2 = password[i]
 
-	chunks = []
-	chunk = passStr[0]
+        if d1 == d2:
+            return True
+        i = i + 2
+    return False
 
-	i = 1
-	while i < len(passStr):
-		if (passStr[i] == passStr[i - 1]):
-			chunk = chunk + str(passStr[i])
-		elif chunks != None:
-			chunks = chunks.append(chunk)
-			chunk = "" + str(passStr[i])
-		i = i + 1
 
-	# break it into chunks based on repeating numbers
-	# chunks := make([]string,0)
-	# chunk := string(passStr[0])
+def Part1(start, end):
+    validPasswords = []
 
-	# for i := 1; i < len(passStr); i++ {
-	# 	if passStr[i] == passStr[i-1] {
-	# 		chunk += string(passStr[i])
-	# 	} else {
-	# 		chunks = append(chunks,chunk)
-	# 		chunk = string(passStr[i])
-	# 	}
-	# }
+    i = start
+    while i < end:
+        if IsValidPassword(i):
+            validPasswords.append(i)
+        i = i + 1
+    return validPasswords
 
-	# append last chunk
-	if chunks != None:
-		chunks = chunks.append(chunk)
 
-	# one of the chunks must be 2
-	foundDouble = False
-	print(chunks)
-	# for _,ch := range(chunks) {
-	# 	if len(ch) == 2 {
-	# 		foundDouble = true
-	# 	}
-	# }
+def Part2(passwords):
+    validPasswords = 0
 
-	if foundDouble == False:
-		return False
+    for x in passwords:
+        if isValidPassword2(x):
+            validPasswords = validPasswords + 1
+    return validPasswords
 
-	return True
-
-def Part2(start, end):
-  i = 0
-  validPasswords = 0
-  while i < end:
-    if (IsMoreValidPassword(i)):
-      validPasswords = validPasswords + 1
-    i = i + 1
-
-  return validPasswords
 
 START = 264360
 END = 746325
-print("Answer:", Part2(START, END))
+
+PASSWORDS = Part1(START, END)
+print(Part2(PASSWORDS))
